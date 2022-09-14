@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+</head>
+<body>
+    <input type = "text" id = "query" oninput = "debounce(main,1000)" />
+    <div id = "container"></div>
+    <div id = "search"></div>
+
+</body>
+</html>
+<script>
+    async function main(){
+        try{
+            let data = await searchtitle();
+            if(!data){
+                return false;
+            }
+            appendData(data)
+        }
+        catch(err){
+       console.log(err)
+        }
+    }
+    async function searchtitle(){
+        try{
+            let movie = document.getElementById("query").value
+            let res = await fetch(
+                'http://localhost:3000/products'
+
+            )
+            let data = await res.json();
+            console.log(data)
+            return data;
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+    let element = document.getElementById('search')
+    function appendData(data){
+        data.forEach((output)=>{
+            console.log(output)
+
+            let title = document.createElement("p")
+            title.innerText = output.title;
+            element.append(title)
+        })
+    }
+    let timer;
+function debounce(funct,time){
+    if(timer){
+        clearTimeout(timer)
+    }
+
+    timer = setTimeout(function(){
+        funct()
+    },time)
+}
+
+</script>
